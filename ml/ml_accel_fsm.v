@@ -16,7 +16,9 @@ module ml_accel_fsm (
               DONE = 2'b11;
 
     reg [1:0] current_state, next_state;
-
+    //fifo of depth 4 to hold values of 2x2 matrix
+    reg[3:0]fifo;
+    reg[1:0] index;
 
     always @(posedge clk or posedge reset) begin
         if (reset)
@@ -43,6 +45,8 @@ module ml_accel_fsm (
             WAIT: begin
                 if (data_ready)
                     next_state = BUSY;
+                    fifo[index]=data_ready;
+                    index=index+1;
             end
 
             BUSY: begin
