@@ -15,6 +15,7 @@ reg[15:0] mem[0:255];
 
 assign Zout=L34_Z;
 
+// first register pipe layer
 always@(posedge clk1)begin
     L12_A <= #2 regbank[rs1];
     L12_B <= #2 regbank[rs2];
@@ -23,6 +24,7 @@ always@(posedge clk1)begin
     L12_addr <= #2 addr;
 end
 
+//second block of alu 23
 always@(posedge clk1)begin
     case(func)
     0:L23_z <= #2 L12_A +L12_B;
@@ -42,7 +44,7 @@ always@(posedge clk1)begin
     L23_rd<=#2 L12_rd;
     L23_addr<=#2 L12_addr;
 end
-
+//third layer writeback 34
 always@(posedge clk1)begin
     regbank[L23_rd]<=#2 L23_z;
     L34_Z <= #2 L23_z;
